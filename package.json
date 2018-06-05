@@ -24,6 +24,7 @@
     "prepublish": "npm run build",
     "build": "node build/build.js",
     "lint": "eslint --ext vue,js --format node_modules/eslint-friendly-formatter 'src/components/**' src/main.js",
+    "lintfix": "eslint --fix --ext vue,js --format node_modules/eslint-friendly-formatter 'src/components/**' src/main.js",
     "test": "jest"
   },
   "jest": {

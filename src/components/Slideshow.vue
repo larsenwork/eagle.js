@@ -1,19 +1,17 @@
 <script>
-import { throttle } from 'lodash'
-
 export default {
   props: {
-    firstSlide: {default: 1},
-    startStep: {default: 1},
-    lastSlide: {default: null},
-    embedded: {default: false},
-    inserted: {default: false},
-    keyboardNavigation: {default: true},
-    mouseNavigation: {default: true},
-    onStartExit: {default: () => function () {}},
-    onEndExit: {default: () => function () {}},
-    skip: {default: false},
-    backBySlide: {default: false}
+    firstSlide: { default: 1 },
+    startStep: { default: 1 },
+    lastSlide: { default: null },
+    embedded: { default: false },
+    inserted: { default: false },
+    keyboardNavigation: { default: true },
+    mouseNavigation: { default: true },
+    onStartExit: { default: () => function () {} },
+    onEndExit: { default: () => function () {} },
+    skip: { default: false },
+    backBySlide: { default: false }
   },
   data: function () {
     return {
@@ -36,7 +34,9 @@ export default {
       return { fontSize: size + 'px' }
     },
     computedActive: function () {
-      return this.slides.some(function (slide) { return slide.active })
+      return this.slides.some(function (slide) {
+        return slide.active
+      })
     }
   },
   mounted: function () {
@@ -75,7 +75,7 @@ export default {
     if (this.preloadedImages) {
       setTimeout(function () {
         for (var image in self.preloadedImages) {
-          (new Image()).src = self.preloadedImages[image]
+          new Image().src = self.preloadedImages[image]
         }
       }, 1000)
     }
@@ -126,9 +126,11 @@ export default {
     },
     nextSlide: function () {
       var nextSlideIndex = this.currentSlideIndex + 1
-      while ((nextSlideIndex < this.slides.length + 1) &&
-             (this.slides[nextSlideIndex - 1].skip ||
-              this.slides[nextSlideIndex - 1].$parent.skip)) {
+      while (
+        nextSlideIndex < this.slides.length + 1 &&
+        (this.slides[nextSlideIndex - 1].skip ||
+          this.slides[nextSlideIndex - 1].$parent.skip)
+      ) {
         nextSlideIndex++
       }
       if (nextSlideIndex < this.slides.length + 1) {
@@ -139,9 +141,11 @@ export default {
     },
     previousSlide: function () {
       var previousSlideIndex = this.currentSlideIndex - 1
-      while ((previousSlideIndex >= 1) &&
-             (this.slides[previousSlideIndex - 1].skip ||
-              (this.slides[previousSlideIndex - 1].$parent.skip))) {
+      while (
+        previousSlideIndex >= 1 &&
+        (this.slides[previousSlideIndex - 1].skip ||
+          this.slides[previousSlideIndex - 1].$parent.skip)
+      ) {
         previousSlideIndex--
       }
       if (previousSlideIndex >= 1) {
@@ -152,44 +156,45 @@ export default {
     },
     handleResize: function () {
       var self = this
-      throttle(function () {
-        var width = 0
-        var height = 0
-        if (self.embedded) {
-          width = self.$el.parentElement.clientWidth
-          height = self.$el.parentElement.clientHeight
-        } else {
-          width = document.documentElement.clientWidth
-          height = document.documentElement.clientHeight
-        }
-        self.$el.style.fontSize = (0.04 * Math.min(height, width)) + 'px'
-      }, 16)()
+      var width = 0
+      var height = 0
+      if (self.embedded) {
+        width = self.$el.parentElement.clientWidth
+        height = self.$el.parentElement.clientHeight
+      } else {
+        width = document.documentElement.clientWidth
+        height = document.documentElement.clientHeight
+      }
+      self.$el.style.fontSize = 0.04 * Math.min(height, width) + 'px'
     },
     click: function (evt) {
       if (this.mouseNavigation && this.currentSlide.mouseNavigation) {
-        var clientX = evt.clientX != null ? evt.clientX : evt.touches[0].clientX
-        if (clientX < (0.25 * document.documentElement.clientWidth)) {
+        var clientX =
+          evt.clientX != null ? evt.clientX : evt.touches[0].clientX
+        if (clientX < 0.25 * document.documentElement.clientWidth) {
           evt.preventDefault()
           this.previousStep()
-        } else if (clientX > (0.75 * document.documentElement.clientWidth)) {
+        } else if (clientX > 0.75 * document.documentElement.clientWidth) {
           evt.preventDefault()
           this.nextStep()
         }
       }
     },
-    wheel: throttle(function (evt) {
+    wheel: function (evt) {
       if (this.mouseNavigation && this.currentSlide.mouseNavigation) {
         evt.preventDefault()
-        if ((evt.wheelDeltaY > 0) || (evt.deltaY > 0)) {
+        if (evt.wheelDeltaY > 0 || evt.deltaY > 0) {
           this.nextStep()
-        } else if ((evt.wheelDeltaY < 0) || (evt.deltaY < 0)) {
+        } else if (evt.wheelDeltaY < 0 || evt.deltaY < 0) {
           this.previousStep()
         }
       }
-    }, 1000),
+    },
     keydown: function (evt) {
-      if (this.keyboardNavigation &&
-          (this.currentSlide.keyboardNavigation || evt.ctrlKey || evt.metaKey)) {
+      if (
+        this.keyboardNavigation &&
+        (this.currentSlide.keyboardNavigation || evt.ctrlKey || evt.metaKey)
+      ) {
         if (evt.key === 'ArrowLeft' || evt.key === 'PageUp') {
           this.previousStep()
           evt.preventDefault()
@@ -208,7 +213,10 @@ export default {
       this.$children.forEach(function (el) {
         if (el.isSlide) {
           i++
-          if ((i >= self.firstSlide) && ((!self.lastSlide) || (i <= self.lastSlide))) {
+          if (
+            i >= self.firstSlide &&
+            (!self.lastSlide || i <= self.lastSlide)
+          ) {
             self.slides.push(el)
           }
         } else if (el.isSlideshow) {
@@ -216,8 +224,10 @@ export default {
           el.slides.forEach(function (slide) {
             i++
             slide.active = false
-            if ((i >= self.firstSlide) &&
-                (!self.lastSlide || (i <= self.lastSlide))) {
+            if (
+              i >= self.firstSlide &&
+              (!self.lastSlide || i <= self.lastSlide)
+            ) {
               self.slides.push(slide)
             }
           })
@@ -236,8 +246,10 @@ export default {
     currentSlide: function (newSlide, oldSlide) {
       if (oldSlide) {
         oldSlide.active = false
-        if ((oldSlide.$parent !== newSlide.$parent) &&
-            (oldSlide.$parent !== this)) {
+        if (
+          oldSlide.$parent !== newSlide.$parent &&
+          oldSlide.$parent !== this
+        ) {
           oldSlide.$parent.active = false
         }
       }
@@ -266,10 +278,5 @@ export default {
     active: 'updateSlideshowVisibility',
     computedActive: 'updateSlideshowVisibility'
   }
-
 }
 </script>
-
-<style lang="sass">
-@import '../themes/base.scss';
-</style>

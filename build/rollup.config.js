@@ -13,17 +13,13 @@ var banner = `/*
 module.exports = {
   entry: 'src/main.js',
   dest: 'dist/eagle.js',
-  format: 'es',
+  format: 'cjs',
   moduleName: 'eagle.js',
-  external: [
-    'highlight.js',
-    'lodash'
-  ],
   banner,
   plugins: [
     vue({
-      css: 'dist/eagle.css'
+      css: 'dist/eagle.css',
     }),
-    babel()
-  ]
+    babel(),
+  ],
 }
