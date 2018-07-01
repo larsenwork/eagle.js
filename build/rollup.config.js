@@ -14,12 +14,9 @@ module.exports = {
   input: 'src/main.js',
   output: [
     { file: 'dist/eagle.cjs.js', format: 'cjs', banner },
-		{ file: 'dist/eagle.es.js', format: 'es', banner }
+    { file: 'dist/eagle.es.js', format: 'es', banner }
   ],
-  external: [
-    'highlight.js',
-    'lodash.throttle'
-  ],
+  external: ['lodash.throttle'],
   plugins: [
     vue({
       css: 'dist/eagle.css'
